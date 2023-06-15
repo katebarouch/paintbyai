@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Paint by AI{% endblock %}
+
+{% block body %}
+
+<style>
+    body {
+        background-color: #fbf9ec;
+        margin: 0;
+        padding: 0;
+    }
+</style>
+ <!-- ======= Hero Section ======= -->
+ <section id="hero4" class="d-flex flex-column justify-content-center align-items-center">
+    <div class="container text-center text-md-left aos-init aos-animate" data-aos="fade-up">
+      <h1>Your Masterpiece is Complete!</h1>
+      <h2>{{prompt}}.</h2>
+      <a href="#view" class="btn-get-started scrollto">Ready to view?</a>
+    </div>
+  </section>
+  <!-- End Hero -->
+  <section id="view" class="view" data-section="1">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h3>Your Masterpiece</h3>
+                <a href="/static/images/{{filename1}}" download>
+                    <button class="download-button">Download Painting</button>
+                  </a>
+                <br>
+                <img class="img-fluid" src="/static/images/{{filename1}}" alt="vectorized" />
+            </div>
+            <div class="col">
+                <h3>Your Paint by Number</h3>
+                <a href="/static/images/{{filename2}}" download>
+                    <button class="download-button">Download Template</button>
+                  </a>
+                <br>
+                <img class="img-fluid" src="/static/images/{{filename2}}" alt="final_product" />
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <a href="#colorslist" class="btn-get-started scrollto">Curious about the colors in your painting?</a>
+        </div>
+    </div>
+  </section>
+  <section id="colorslist" class="colorslist" data-section="2">
+    <div class="container">
+        <div class="row">
+            <div>
+                <h3>Behold, a one of a kind palette that shall guide your creative odyssey.</h3>
+            </div>
+            <button class="download-button" id="download-button">Download Color Information</button>
+        </div>
+        <!-- <div class="palette"> -->
+            <div class="grid-container">
+                {% for color, value in color_dict.items() %}
+                    {% set number, common_color_name = value.split('\n', 1) %}
+                    {% if "1 " not in number %}
+                        <div class="color-row">
+                            <div class="color-square" style="background-color: {{ color }};" data-text="{{ number}}: {{ common_color_name}}"></div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+              </div>
+    <div class = "row">
+        <a class="shop-button" id="shop-button" href="/shop/{{ painting_id }}">Let's get the supplies we need!</a>
+    </div>
+    
+  </section>
+  
+{% endblock %}

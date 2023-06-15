@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Paint by AI{% endblock %}
+
+{% block body %}
+
+<style>
+  body {
+      background-color: #fbf9ec;
+      margin: 0;
+      padding: 0;
+  }
+</style>
+
+ <!-- ======= Hero Section ======= -->
+
+ <section id="hero3" class="d-flex flex-column justify-content-center align-items-center">
+    <div class="container text-center text-md-left aos-init aos-animate" data-aos="fade-up">
+      <h1>The Paint by AI Gallery</h1>
+      <h2>A realm where enchantment dances upon the canvas and brings to life to your imagination.</h2>
+      <a href="#gallery" class="btn-get-started scrollto">Ready to Enter?</a>
+    </div>
+  </section>
+  
+  <!-- End Hero -->
+
+  <!-- ======= Gallery Section ======= -->
+  <section id="gallery" class="gallery">
+    <div class="grid-container">
+      {% for painting in paintings %}
+      <a href="/finalproduct/{{ painting.painting_id }}">
+        <div id="gallery_img" style="width: 15vw; height: 15vw; background-image: url('/static/images/{{ painting.vectorized_img }}'); background-size: cover;"></div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  
+  <!-- End Gallery -->
+
+{% endblock %}

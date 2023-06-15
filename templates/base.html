@@ -1,0 +1,101 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  
+    <title>Paint by AI</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+  
+    <!-- Favicons -->
+    <link href="static/maxim-pro/paintbyai.png" rel="icon">
+  
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+    <!-- Vendor CSS Files -->
+    <link href="{{ url_for('static', filename='maxim-pro/assets/vendor/aos/aos.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='maxim-pro/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='maxim-pro/assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='maxim-pro/assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='maxim-pro/assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='maxim-pro/assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='maxim-pro/assets/css/style.css') }}" rel="stylesheet">
+  
+    <!-- Template Main CSS File -->
+    <link href="static/maxim-pro/assets/css/style.css" rel="stylesheet">
+  
+    <!-- =======================================================
+    * Template Name: Maxim
+    * Updated: May 30 2023 with Bootstrap v5.3.0
+    * Template URL: https://bootstrapmade.com/maxim-free-onepage-bootstrap-theme/
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+    <title>
+      {% block title %}{% endblock %}
+    </title>
+
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <body data-aos-easing="ease-in-out" data-aos-duration="1000" data-aos-delay="0">
+  
+        <!-- ======= Header ======= -->
+        <header id="header" class="fixed-top d-flex align-items-center">
+          <div class="container d-flex justify-content-between">
+      
+            <div class="logo">
+              <h1><a href="/">Paint by AI</a></h1>
+              <!-- Uncomment below if you prefer to use an image logo -->
+              <!-- <img src="static/maxim-pro/paintbyai.png" alt="" class="img-fluid"></a> -->
+            </div>
+      
+            <nav id="navbar" class="navbar">
+              <ul>
+                <li><a class="nav-link scrollto active" href="/#hero">Home</a></li>
+                <li><a class="nav-link scrollto" href="/#begin">Login</a></li>
+                <li><a class="nav-link scrollto" href="/#begin">Sign Up</a></li>
+                <li><a class="nav-link scrollto" href="/create">Create</a></li>
+                <li><a class="nav-link scrollto" href="/gallery">Gallery</a></li>
+                <li><a class="nav-link scrollto" href="/shop">Shop</a></li>
+                <li><a class="nav-link scrollto" href="/faq">F.A.Q.</a></li>
+                <li><a class="nav-link scrollto" href="/#footer">Contact</a></li>
+              </ul>
+              <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav><!-- .navbar -->
+      
+          </div>
+        </header><!-- End Header -->
+
+    {% block body %}{% endblock %}
+
+        <!-- ======= Footer ======= -->
+        <footer id="footer">
+            <div class="footer-top">
+              <div class="container">
+                <div class="row">
+        
+                  <div class="col-lg-3 col-md-6">
+                    <div class="footer-info">
+                      <h5>Created by:</h5>
+                       <br> 
+                      <h4>Kate Barouch</h4>
+                      <div class="social-links mt-3">
+                        <a href="#" class="google-plus"><i class="bx bxl-github"></i></a>
+                        <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+                        <a href="#" class="email"><i class="bx bx-mail-send"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </footer><!-- End Footer -->
+
+    {% block after_body %}{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="static/maxim-pro/assets/js/main.js"></script>
+</body>
+</html>

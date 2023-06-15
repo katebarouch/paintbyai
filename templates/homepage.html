@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}Paint by AI{% endblock %}
+
+{% block body %}
+
+
+
+    <!-- ======= Hero Section ======= -->
+
+    <section id="hero" class="d-flex flex-column justify-content-center align-items-center">
+      <div class="container text-center text-md-left aos-init aos-animate" data-aos="fade-up">
+        <h1>WELCOME TO PAINTER'S PARADISE</h1>
+        <h2>Let us create you a one custom one-of-a-kind paint by numbers! </h2>
+        <a href="#begin" class="btn-get-started scrollto">enter</a>
+      </div>
+    </section>
+    
+    <!-- End Hero -->
+    <main id="main">
+
+      <!-- ======= Login or Sign Up Section ======= -->
+      <section id="begin" class="begin">
+        <div>
+            {% for msg in get_flashed_messages() %}
+            <p class="flash-msg">
+              {{ msg }}
+            </p>
+            {% endfor %}
+            </div>
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6 col-lg-7 aos-init">
+                    <h1>Sign In</h2>
+                <form action="/login" method="POST">
+                    <p>
+                        Email <br> <input type="text" name="email">
+                    </p>
+
+                    <p>
+                        Password <br> <input type="password" name="password">
+                    </p>
+
+                    <p>
+                        <input type="submit">
+                    </p>
+                </form>
+
+                </div>
+                <div class="col-xl-6 col-lg-5 pt-5 pt-lg-0">
+                    <h1>Create an Account</h2>
+                    <form action="/users" method="POST">
+                      <p>
+                        Email <br> <input type="text" name="email">
+                      </p>
+                  
+                      <p>
+                        Password <br> <input type="password" name="password">
+                      </p>
+                  
+                      <p>
+                        <input type="submit">
+                      </p>
+                    </form>
+      
+                </div>
+              </div>
+      
+            </div>
+      <!-- ======= Pages Section ======= -->
+      <section id="pages" class="pages">
+        <div class="container">
+  
+          <div class="row">
+            <div class="col-xl-6 col-lg-7 aos-init" data-aos="fade-right">
+              <img src="/static/maxim-pro/assets/img/madscientist.png" class="img-fluid" alt="">
+              <h1><a class="nav-link scrollto" href="/create">Paint by AI Laboratory</a></h1>
+
+            </div>
+            <div class="col-xl-6 col-lg-5 pt-5 pt-lg-0">
+                <img src="/static/maxim-pro/assets/img/gallery.png" class="img-fluid" alt="">
+                <h1><a class="nav-link scrollto" href="/gallery">Paint by AI Gallery</a></h1>
+  
+              </div>
+                
+
+      </section>
+      <!-- End pages Section -->
+  
+  
+    </main><!-- End #main -->
+
+  
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  
+    <!-- Vendor JS Files -->
+    <script src="static/maxim-pro/assets/vendor/aos/aos.js"></script>
+    <script src="static/maxim-pro/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="static/maxim-pro/assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="static/maxim-pro/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="static/maxim-pro/assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="static/maxim-pro/assets/vendor/php-email-form/validate.js"></script>
+  
+    <!-- Template Main JS File -->
+    <script src="static/maxim-pro/assets/js/main.js"></script>
+  
+  </body>
+{% endblock %}

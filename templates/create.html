@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+{% block title %}Paint by AI{% endblock %}
+
+{% block body %}
+ <!-- ======= Hero Section ======= -->
+
+ <section id="hero2" class="d-flex flex-column justify-content-center align-items-center">
+  <div class="container text-center text-md-left aos-init aos-animate" data-aos="fade-up">
+    <h1>The Paint by AI Laboratory</h1>
+    <!-- <h2>A realm where technology and enchantment converge, birthing extraordinary creations with precision and artistic allure.</h2> -->
+    <a href="#object" class="btn-get-started scrollto">Shall we begin?</a>
+  </div>
+</section>
+
+<!-- End Hero -->
+
+ <!-- ======= Form Section ======= -->
+ <form action="/create" method="POST">
+  <!-- Object Section -->
+  <section id="object" class="object" data-section="1">
+    <div class="container">
+      <div class="row">
+        <h3>What would you like to paint?</h3>
+      </div>
+      <br>
+      <div>
+        <label>
+          <img src="/static/maxim-pro/assets/img/quill.png" alt="quill">
+        </label>
+        <input type="text" name="object" value="">
+        <button type="button" class="continue-button" onclick="scrollToNextSection()">Continue</button>
+      </div>
+    </div>
+  </section>
+  <!-- End Object -->
+
+   <!-- ======= Medium Section ======= -->
+   <section id="medium" class="medium" data-section="2">
+    <div class="container">
+      <div class="row">
+        <h3>What is your desired painting medium?</h3>
+      </div>
+      <br>
+      <br>
+      <style>
+        /* Hide the default radio button */
+        input[type="radio"] {
+          display: none;
+        }
+      </style>
+      <label>
+        <input type="radio" name="medium" value="watercolor">
+        <img class="mb-20 b-lazy" src="/static/maxim-pro/assets/img/watercolor.png" alt="watercolor" width="200px" height="200px">
+        <h3> watercolor </h3>
+      </label>
+
+      <label>
+        <input type="radio" name="medium" value="pastel">
+        <img class="mb-20 b-lazy" src="/static/maxim-pro/assets/img/pastels.png" alt="pastel" width="200px" height="200px">
+        <h3> pastel </h3>
+      </label>
+
+      <label>
+        <input type="radio" name="medium" value="oil">
+        <img class="mb-20 b-lazy" src="/static/maxim-pro/assets/img/oilpaint.png" alt="oil" width="200px" height="200px">
+        <h3> oil </h3>
+      </label>
+
+      
+    </div>
+  </section>
+ <!-- End Medium -->
+
+   <!-- ======= Colors Section ======= -->
+   <section id="colors" class="colors" data-section="3">
+    <div class="container">
+      <div class="row">
+        <h3>How many unique colors?</h3>
+      </div>
+
+      <style>
+        /* Hide the default radio button */
+        input[type="radio"] {
+          display: none;
+        }
+      </style>
+
+      <label>
+        <input type="radio" name="colors" value="15">
+        <img class="mb-20 b-lazy" src="/static/maxim-pro/assets/img/fifteen.png" alt="15" width="200px" height="200px">
+        <h3> fifteen </h3>
+      </label>
+
+      <label>
+        <input type="radio" name="colors" value="20">
+        <img class="mb-20 b-lazy" src="/static/maxim-pro/assets/img/twenty.png" alt="20" width="200px" height="200px">
+        <h3> twenty </h3>
+      </label>
+
+      <label>
+        <input type="radio" name="colors" value="25">
+        <img class="mb-20 b-lazy" src="/static/maxim-pro/assets/img/twentyfive.png" alt="25" width="200px" height="200px">
+        <h3> twenty-five </h3>
+      </label>
+
+  </section>
+
+ <!-- End Colors -->
+
+  <!-- ======= Light Section ======= -->
+
+  <section id="light" class="light" data-section="4">
+    <div class="container">
+      <div class="row">
+        <h3>What is your paintings aesthetic?</h3>
+      </div>
+      <br>
+      <style>
+        /* Hide the default radio button */
+        input[type="radio"] {
+          display: none;
+        }
+      </style>
+      <label>
+        <input type="radio" name="light" value="light">
+        <img class="mb-20 b-lazy" src="/static/maxim-pro/assets/img/lightrose.png" alt="light">
+        <h3> light </h3>
+      </label>
+
+      <label>
+        <input type="radio" name="light" value="dark">
+        <img class="mb-20 b-lazy" src="/static/maxim-pro/assets/img/darkrose.png" alt="dark">
+        <h3> dark </h3>
+      </label>
+
+      <label>
+        <input type="radio" name="light" value="colorful">
+        <img class="mb-20 b-lazy" src="/static/maxim-pro/assets/img/colorfulrose.png" alt="colorful">
+        <h3> colorful </h3>
+      </label>
+
+    </div>
+  </section>
+
+ <!-- End Light -->
+
+   <!-- Mood Section -->
+   <section id="mood" class="mood" data-section="5">
+    <div class="container">
+      <div class="row">
+        <h3>What is your paintings vibe?</h3>
+      </div>
+      <br>
+      <style>
+        /* Hide the default radio button */
+        input[type="radio"] {
+          display: none;
+        }
+      </style>
+      <label>
+        <input type="radio" name="mood" value="moody">
+        <img class="mb-20 b-lazy" src="/static/maxim-pro/assets/img/moody.png" alt="moody">
+        <h3> moody </h3>
+      </label>
+
+      <label>
+        <input type="radio" name="mood" value="whimsical">
+        <img class="mb-20 b-lazy" src="/static/maxim-pro/assets/img/whimsical.png" alt="whimsical">
+        <h3> whimsical </h3>
+      </label>
+
+      <label>
+        <input type="radio" name="mood" value="futuristic">
+        <img class="mb-20 b-lazy" src="/static/maxim-pro/assets/img/futuristic.png" alt="futuristic">
+        <h3> futuristic </h3>
+      </label>
+
+      <label>
+        <input type="radio" name="mood" value="ethereal">
+        <img class="mb-20 b-lazy" src="/static/maxim-pro/assets/img/ethereal.png" alt="ethereal">
+        <h3> ethereal </h3>
+      </label>
+
+      <label>
+        <input type="radio" name="mood" value="steampunk">
+        <img class="mb-20 b-lazy" src="/static/maxim-pro/assets/img/steampunk.png" alt="steampunk">
+        <h3> steampunk </h3>
+      </label>
+
+      <label>
+        <input type="radio" name="mood" value="vintage">
+        <img class="mb-20 b-lazy" src="/static/maxim-pro/assets/img/vintage.png" alt="vintage">
+        <h3> vintage </h3>
+      </label>
+
+    </div>
+  </section>
+  <!-- End Mood -->
+
+  <section id="submit" class="submit" data-section="6">
+    <div class="container">
+      <div class="row">
+        <button type="submit" class="bell-button">
+          <img src="/static/maxim-pro/assets/img/bell.png" alt="Bell Image">
+        </button>
+        <h3 class="button-text">Press for the painting of your dreams!</h3>
+      </div>
+    </div>
+  </section>
+  
+
+<script>
+
+  const sections = document.querySelectorAll('section');
+  let currentSectionNumber = 1;
+
+  const scrollToNextSection = () => {
+    const nextSectionNumber = currentSectionNumber + 1;
+    const nextSection = document.querySelector(`section[data-section="${nextSectionNumber}"]`);
+      
+    if (nextSection) {
+      currentSectionNumber = nextSectionNumber;
+      nextSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleInputChange = () => {
+    scrollToNextSection();
+  };
+
+  const radioButtons = document.querySelectorAll('input[type="radio"]');
+  radioButtons.forEach((radioButton) => {
+    radioButton.addEventListener('change', scrollToNextSection);
+  });
+
+  const textInputs = document.querySelectorAll('input[type="text"]');
+  textInputs.forEach((textInput) => {
+    textInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        scrollToNextSection();
+      }
+  });
+});
+
+</script>
+
+  
+</form>
+
+{% endblock %}

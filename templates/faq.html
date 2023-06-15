@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Paint by AI{% endblock %}
+
+{% block body %}
+      <!-- ======= F.A.Q Section ======= -->
+      <section id="faq" class="faq section-bg">
+        <div class="container">
+  
+          <div class="section-title aos-init">
+            <h2>F.A.Q</h2>
+            <p>Discover your artistic side with our innovative website. Simply input your ideas, and our DALL-E API will generate a personalized image, which our Python algorithms will transform into a paint-by-numbers template. Download the template, print it on canvas paper or canvas, and embark on a creative journey as you bring your unique masterpiece to life.</p>
+          </div>
+  
+          <div class="faq-list">
+            <ul>
+                <li data-aos-delay="100" class="aos-init">
+                <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" class="collapse" data-bs-target="#faq-list-1">How does the website generate the personalized images based on user input? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+                <div id="faq-list-1" class="collapse show" data-bs-parent=".faq-list">
+                  <p>
+                    The website utilizes the DALL-E API, a deep learning model, to generate unique images based on the user's input. The model learns from a vast dataset and uses its creativity to generate original visuals.
+                  </p>
+                </div>
+              </li>
+  
+              <li data-aos-delay="100" class="aos-init">
+                <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-2" class="collapsed">Can I choose the level of complexity for the paint-by-numbers template? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+                <div id="faq-list-2" class="collapse" data-bs-parent=".faq-list">
+                  <p>
+                    Absolutely! The Python algorithms employed by the website allow users to customize the number of unique colors in paint-by-numbers template. You can adjust the number of colors according to your preference.
+                  </p>
+                </div>
+              </li>
+  
+              <li data-aos-delay="200" class="aos-init">
+                <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-3" class="collapsed">Are there any limitations on the size or type of canvas I can use for printing? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+                <div id="faq-list-3" class="collapse" data-bs-parent=".faq-list">
+                  <p>
+                    The website provides flexibility in terms of canvas size and type. You can download the generated template and print it on canvas paper or traditional canvas. The choice of size and material is entirely up to you. The template is an SVG file to it has unlimited scalability.
+                  </p>
+                </div>
+              </li>
+  
+              <li data-aos-delay="300" class="aos-init">
+                <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-4" class="collapsed">Is the website free to use, or are there any charges involved? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+                <div id="faq-list-4" class="collapse" data-bs-parent=".faq-list">
+                  <p>
+                    You can freely use the website's features, such as generating personalized images and paint-by-numbers templates, without any charges. If you'd like to support us, we appreciate it if you use our Amazon link for any related purchases, as it helps sustain our website's operations through a small payment we receive.
+                  </p>
+                </div>
+              </li>
+  
+            </ul>
+          </div>
+  
+        </div>
+      </section><!-- End F.A.Q Section -->
+
+    </body>
+    {% endblock %}

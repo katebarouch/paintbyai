@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Paint by AI{% endblock %}
+
+{% block body %}
+ <!-- ======= Hero Section ======= -->
+
+ <section id="hero5" class="d-flex flex-column justify-content-center align-items-center">
+    <div class="container text-center text-md-left aos-init aos-animate" data-aos="fade-up">
+      <h1>The Paint by AI Boutique</h1>
+      <h2>Within these mystical walls, vibrant canvases and an array of paints await. <br>
+         A personalized shopping assistant, embodying the essence of a ChatGPT bot, eagerly guides you towards your artistic desires..</h2>
+      <a href="#object" class="btn-get-started scrollto">Ready to Enter?</a>
+    </div>
+  </section>
+  
+  <!-- End Hero -->
+
+  <!-- ======= Paint Info Section ======= -->
+
+  <section id="shop" class = "shop">
+    <div class="container">
+        <div class="row">
+            Shopping List:
+            - canvas 
+            - paint brushes
+            - {{paint_info}}
+        </div>
+    </div>
+
+
+  </section>
+
+
+{% endblock %}
