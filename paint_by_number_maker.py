@@ -9,11 +9,12 @@ import io
 from svgpathtools import parse_path, Line, QuadraticBezier, svg2paths2
 from dotenv import load_dotenv
 import os
-load_dotenv("secrets.sh")
+load_dotenv(".gitignore/secrets.sh")
 
 def dall_e():
     # define OpenAI key
     api_key = os.getenv("OPENAI_API_KEY")
+    openai.api_key = api_key
 
     # text prompt
     answer = input("What would you like to paint today?")
@@ -32,7 +33,8 @@ def dall_e():
 
 def dalle(prompt):
     # define OpenAI key
-    openai.api_key = "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"
+    api_key = os.getenv("OPENAI_API_KEY")
+    openai.api_key = api_key
 
     # prompt = answer
 
@@ -257,71 +259,95 @@ def remove_inner_segments(paths, attributes):
 
 
 def replace_fill_colors_black_lines(svg_file, output2_file):
-    paths, attributes, svg_attributes = svg2paths2(svg_file)
+    attempt_count = 0
+    max_attempts = 5
 
-    # Merge neighboring paths with the same fill color
-    paths, attributes = merge_neighboring_paths(paths, attributes)
+    while attempt_count < max_attempts:
+        try:
+            paths, attributes, svg_attributes = svg2paths2(svg_file)
 
-    # Remove any unnecessary path segments in the center of the path
-    paths, attributes, centers = remove_inner_segments(paths, attributes)
+            # Merge neighboring paths with the same fill color
+            paths, attributes = merge_neighboring_paths(paths, attributes)
 
-    drawing = Drawing(output2_file, viewBox="0 0 1024 1024") 
+            # Remove any unnecessary path segments in the center of the path
+            paths, attributes, centers = remove_inner_segments(paths, attributes)
 
-    # Save the drawing as an SVG file
-    drawing.saveas(output2_file)
+            drawing = Drawing(output2_file, viewBox="0 0 1024 1024")
 
-    # Dictionary to store hex codes and their corresponding numbers
-    color_dict = {}
+            # Save the drawing as an SVG file
+            drawing.saveas(output2_file)
 
-    for index in range(len(paths)):
-        path_str = paths[index]
-        path_attributes = attributes[index]
+            # Dictionary to store hex codes and their corresponding numbers
+            color_dict = {}
 
-        # Create a group element
-        group = drawing.add(drawing.g())
+            for index in range(len(paths)):
+                path_str = paths[index]
+                path_attributes = attributes[index]
 
-        if 'fill' in path_attributes and 'd' in path_attributes:
-            # Get the fill color
-            fill_color = path_attributes['fill']
+                # Create a group element
+                group = drawing.add(drawing.g())
 
-            # Clean up the 'd' attribute
-            d = " ".join(path_attributes['d'].split())
+                if 'fill' in path_attributes and 'd' in path_attributes:
+                    # Get the fill color
+                    fill_color = path_attributes['fill']
 
-            # Create a new path with the specified attributes
-            new_path = path.Path(d=d, fill=fill_color, fill_opacity=0.15, stroke=fill_color, stroke_opacity=0.25, stroke_width=1.25)
+                    # Clean up the 'd' attribute
+                    d = " ".join(path_attributes['d'].split())
 
-            # Add the new path to the drawing
-            drawing.add(new_path)
+                    # Create a new path with the specified attributes
+                    new_path = path.Path(
+                        d=d,
+                        fill=fill_color,
+                        fill_opacity=0.15,
+                        stroke=fill_color,
+                        stroke_opacity=0.25,
+                        stroke_width=1.25,
+                    )
 
-            # Assign number to the fill color or reuse existing number
-            if fill_color not in color_dict:
-                color_dict[fill_color] = len(color_dict) + 1
-            number = color_dict[fill_color]
+                    # Add the new path to the drawing
+                    drawing.add(new_path)
 
-            # Find the first two segments of the path
-            segments = parse_path(d)
-            segment1 = segments[0]
-            segment2 = segments[1]
+                    # Assign number to the fill color or reuse existing number
+                    if fill_color not in color_dict:
+                        color_dict[fill_color] = len(color_dict) + 1
+                    number = color_dict[fill_color]
 
-            # Calculate the midpoint of the first two segments
-            midpoint = (segment1.point(0.5) + segment2.point(0.5)) / 2
+                    # Find the first two segments of the path
+                    segments = parse_path(d)
+                    segment1 = segments[0]
+                    segment2 = segments[1]
 
-            # Add the text element above the path at the midpoint
-            text = drawing.text(fill=fill_color, insert=(midpoint.real, midpoint.imag - 1), text=str(number))
-            text['font-size'] = "7px"
-            text['text-anchor'] = 'middle'
-            text['dominant-baseline'] = 'central'  # Center the text horizontally
-            group.add(text)
+                    # Calculate the midpoint of the first two segments
+                    midpoint = (segment1.point(0.5) + segment2.point(0.5)) / 2
 
-    # Save the drawing as an SVG file
-    drawing.saveas(output2_file)
+                    # Add the text element above the path at the midpoint
+                    text = drawing.text(
+                        fill=fill_color,
+                        insert=(midpoint.real, midpoint.imag - 1),
+                        text=str(number),
+                    )
+                    text['font-size'] = "7px"
+                    text['text-anchor'] = 'middle'
+                    text['dominant-baseline'] = 'central'  # Center the text horizontally
+                    group.add(text)
 
-    # Print the color dictionary
-    print("Color Dictionary:")
-    for color, number in color_dict.items():
-        print(f"Hex Code: {color} - Number: {number}")
-    
-    return color_dict
+            # Save the drawing as an SVG file
+            drawing.saveas(output2_file)
+
+            # Print the color dictionary
+            print("Color Dictionary:")
+            for color, number in color_dict.items():
+                print(f"Hex Code: {color} - Number: {number}")
+
+            return color_dict
+
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            attempt_count += 1
+
+    print("Max attempts reached. Function failed.")
+    return None
+
     
 
 # def main():

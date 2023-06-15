@@ -57,15 +57,13 @@
             <div class="grid-container">
                 {% for color, value in color_dict.items() %}
                     {% set number, common_color_name = value.split('\n', 1) %}
-                    {% if "1 " not in number %}
                         <div class="color-row">
                             <div class="color-square" style="background-color: {{ color }};" data-text="{{ number}}: {{ common_color_name}}"></div>
                         </div>
-                    {% endif %}
                 {% endfor %}
               </div>
     <div class = "row">
-        <a class="shop-button" id="shop-button" href="/shop/{{ painting_id }}">Let's get the supplies we need!</a>
+        <a class="shop-button" id="shop-button" href="/shop">Let's get the supplies we need!</a>
     </div>
     
   </section>

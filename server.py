@@ -5,7 +5,7 @@ import crud
 from jinja2 import StrictUndefined
 from paint_by_number_maker import create_paint_by_numbers
 from shop import get_paint_info
-
+from passlib.hash import argon2
 
 app = Flask(__name__)
 app.secret_key = "dev"
@@ -26,36 +26,36 @@ def create_user():
     """Create a new user."""
     email = request.form.get("email")
     password = request.form.get("password")
+    hashed = argon2.hash(password)
+
     user = crud.get_user_by_email(email)
     if user:
         flash("This email is already associated with an account, please login with password.") 
     else:
-        user = crud.create_user(email, password)
+        user = crud.create_user(email, hashed)
         db.session.add(user) 
         db.session.commit()
-        flash("Account created succesfully and you can now login.")
-    return redirect ('/')
+        flash("Account created successfully, and you can now login.")
+    return redirect('/#begin')
 
-@app.route('/login', methods = ['POST'])    
+@app.route('/login', methods=['POST'])
 def login():
     """Login user"""
     email = request.form.get("email")
     password = request.form.get("password")
     user = crud.get_user_by_email(email)
-    print(user)
+
     if user:
-        if password == user.password:
+        if argon2.verify(password, user.password):
             session['user_id'] = user.user_id
             flash('Logged in!')
             return redirect('/create')
         else:
-            print(user.password)
             flash("Wrong Password")
             return redirect(url_for('homepage') + '#begin')
     else:
         flash("Wrong username.")
         return redirect(url_for('homepage') + '#begin')
-
 
 @app.route('/create')
 def create():
@@ -130,22 +130,14 @@ def view_product(painting_id):
 
     return render_template('finalproduct.html', filename1=filename1, filename2=filename2, prompt = prompt, color_dict = color_dict, painting_id=painting_id)
 
-@app.route('/shop/<painting_id>')
-def trial(painting_id):
-    painting = Painting.query.filter(Painting.painting_id == painting_id).first()
-    media = painting.media
-
-    colors = Paint.query.filter(Paint.painting_id == painting_id).all()
-    hexcode_list =[]
-    for color in colors:
-        hexcode = color.hexcode
-        hexcode_list.append(hexcode)
+@app.route('/shop')
+def trial():
     
-    chat_gpt_content = f"Make a shopping list (as short as possible) of the {media} paints I need to buy to make the following colors: {hexcode_list}. Include common name of the colors, the minimum paint tubes needed and in what colors, and then the recipe to mix the colors, as needed."
+    # chat_gpt_content = f"Make a shopping list (as short as possible) of the {media} paints I need to buy to make the following colors: {hexcode_list}. Include common name of the colors, the minimum paint tubes needed and in what colors, and then the recipe to mix the colors, as needed."
 
-    paint_info = get_paint_info(chat_gpt_content)
+    # paint_info = get_paint_info(chat_gpt_content)
 
-    return render_template("shop.html", paint_info = paint_info)
+    return render_template("shop.html")
 
 if __name__ == "__main__":
     connect_to_db(app)
