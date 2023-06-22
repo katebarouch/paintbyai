@@ -187,4 +187,3 @@ def logout():
 
 if __name__ == "__main__":
     connect_to_db(app)
-    app.run(host='127.0.0.1', port=5000)
