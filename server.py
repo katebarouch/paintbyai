@@ -6,10 +6,18 @@ from jinja2 import StrictUndefined
 from paint_by_number_maker import create_paint_by_numbers
 from shop import get_paint_info
 from passlib.hash import argon2
+from flask import Flask
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
+
+# Store the current month and the number of uses
+current_month = datetime.now().month
+use_count = 0
+max_uses = 50
+
 
 @app.route('/')
 def homepage():
@@ -59,8 +67,30 @@ def login():
 
 @app.route('/create')
 def create():
+
+    if 'user_id' in session:
+        user = session['user_id']
     
-    return render_template("create.html")
+        global  use_count, current_month
+
+        # Check if the current month has changed
+        if datetime.now().month != current_month:
+            # Reset the use count for the new month
+            current_month = datetime.now().month
+            use_count = 0
+
+        if use_count < max_uses:
+            # Increment the use count
+            use_count += 1
+            return render_template("create.html")
+        else:
+            # Access limit reached, return an error or redirect to another page
+            return "Access limit reached for this month."
+    
+    else:
+
+        return render_template("no_user.html")
+    
 
 @app.route('/create', methods = ['POST'])
 def get_info():
@@ -102,13 +132,14 @@ def get_info():
 
     return redirect(f'/finalproduct/{painting_id}')
 
-
 @app.route('/gallery')
 def view_gallery():
-    user = session['user_id']
-    paintings = Painting.query.filter(Painting.user_id == user).all()
-
-    return render_template("gallery.html", paintings=paintings)
+    if 'user_id' in session:
+        user = session['user_id']
+        paintings = Painting.query.filter(Painting.user_id == user).all()
+        return render_template("gallery.html", paintings=paintings)
+    else:
+        return render_template("no_user.html")
 
 @app.route('/finalproduct/<painting_id>')
 def view_product(painting_id):
@@ -121,23 +152,38 @@ def view_product(painting_id):
     print(colors)
 
     color_dict = {}
-    for color in colors:
+    color_prompts = [f'What is the English name for color {color.hexcode}? Your response should be in the format of "#hexcode: english name".' for color in colors]
+    print(color_prompts)
+    responses = get_paint_info(color_prompts)
+    print(responses)
+    
+    for index, color in enumerate(colors):
         hexcode = color.hexcode
         number = color.paint_id
-        common_color_name = get_paint_info(f'What is the English name for color {hexcode}? Your response should be just the name of the color.')
-        color_dict[hexcode] = f"{number} \n {common_color_name}"
+        if index < len(responses):
+            common_color_name = responses[index]
+            color_dict[hexcode] = f"{number} \n {common_color_name}"
+        else:
+            print(f"No response found for color: {hexcode}")
+
 
 
     return render_template('finalproduct.html', filename1=filename1, filename2=filename2, prompt = prompt, color_dict = color_dict, painting_id=painting_id)
 
 @app.route('/shop')
-def trial():
+def shop():
     
     # chat_gpt_content = f"Make a shopping list (as short as possible) of the {media} paints I need to buy to make the following colors: {hexcode_list}. Include common name of the colors, the minimum paint tubes needed and in what colors, and then the recipe to mix the colors, as needed."
 
     # paint_info = get_paint_info(chat_gpt_content)
 
     return render_template("shop.html")
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash("You are logged out.") 
+    return redirect('/#begin')
 
 if __name__ == "__main__":
     connect_to_db(app)

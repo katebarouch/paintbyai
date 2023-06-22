@@ -701,6 +701,63 @@ h7 {
   }
 }
 
+#hero6 {
+  width: 100%;
+  height: calc(100vh - 70px);
+  background: url("/static/maxim-pro/assets/img/stop.png") center center;
+  background-size: cover;
+  position: relative;
+  margin-top: 70px;
+  padding: 0;
+}
+
+#hero6:before {
+  content: "";
+  background: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+#hero6 .container {
+  z-index: 2;
+}
+
+#hero6 h1 {
+  margin: 0 0 10px 0;
+  font-size: 60px;
+  font-weight: 700;
+  line-height: 56px;
+  color: #fbf9ec;
+}
+
+#hero6 h2 {
+  color: #fbf9ec;
+  margin-bottom: 30px;
+  font-size: 20px;
+}
+
+#hero6 .btn-get-started {
+  font-family: "CormorantGaramond";
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 1px;
+  display: inline-block;
+  padding: 8px 28px;
+  border-radius: 4px;
+  transition: 0.5s;
+  border: 2px solid #fbf9ec;
+  color: #fbf9ec;
+}
+
+#hero6 .btn-get-started:hover {
+  border-color: #ba2a47;
+  background: #ba2a47;
+}
+
 /*--------------------------------------------------------------
 # Login General
 --------------------------------------------------------------*/
@@ -978,8 +1035,25 @@ input[type="password"] {
 }
 
 /*--------------------------------------------------------------
+# Loading
+--------------------------------------------------------------*/
+
+#loading-text {
+  margin-top: 5vh;
+  font-size: 40px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-family: "Victorian Parlor Vintage Alternate";
+  color:#ba2a47;
+}
+
+/*--------------------------------------------------------------
 # F.A.Q
 --------------------------------------------------------------*/
+.faq .container {
+  margin-top: 8vh;
+}
+
 .faq .faq-list {
   padding: 0 100px;
 }
@@ -1058,6 +1132,17 @@ input[type="password"] {
     padding: 0;
   }
 }
+/*--------------------------------------------------------------
+# Shop
+--------------------------------------------------------------*/
+
+.shop {
+  background-color: #fbf9ec;
+  align-items: center;
+  justify-content: center;
+}
+  
+
 /*--------------------------------------------------------------
 # Final Product
 --------------------------------------------------------------*/

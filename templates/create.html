@@ -200,11 +200,14 @@
   <section id="submit" class="submit" data-section="6">
     <div class="container">
       <div class="row">
-        <button type="submit" class="bell-button">
+        <button type="submit" class="bell-button" id="bell-button">
           <img src="/static/maxim-pro/assets/img/bell.png" alt="Bell Image">
         </button>
+        <div id="loading-text"></div>
         <h3 class="button-text">Press for the painting of your dreams!</h3>
       </div>
+    </div>
+    <div>
     </div>
   </section>
   
@@ -243,9 +246,34 @@
   });
 });
 
+var bellButton = document.getElementById('bell-button');
+    var loadingText = document.getElementById('loading-text');
+  
+    bellButton.addEventListener('click', function() {
+      loadingText.style.display = 'block';
+  
+      var texts = [
+        "Dalle is crafting your masterpiece...",
+        "Python algorithms are weaving your paint-by-number template...",
+        "ChatGPT is translating your mystical hex codes to enchanting colors...",
+        "Magical brushes are preparing to dance on the canvas...",
+        "The art studio is buzzing with mystical energy...",
+        "Whispers of ancient artists guide the creative process..."
+      ];
+  
+      var currentIndex = 0;
+  
+      function changeText() {
+        loadingText.textContent = texts[currentIndex];
+        currentIndex = (currentIndex + 1) % texts.length;
+      }
+  
+      // Change the loading text every 8 seconds
+      var intervalId = setInterval(changeText, 8000);
+    });
+
 </script>
 
-  
 </form>
 
 {% endblock %}

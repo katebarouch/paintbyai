@@ -17,3 +17,4 @@ requests==2.31.0
 requires.io == 0.2.6
 shapely==2.0.1
 passlib==1.7.4
+Flask_Limiter==3.3.1
