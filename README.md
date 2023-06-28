@@ -42,5 +42,7 @@ Final Product Page
 <img width="1713" alt="Screenshot 2023-06-27 at 5 10 58 PM" src="https://github.com/katebarouch/paintbyai/assets/131073205/64f33625-fcda-4602-a220-7959e9952b8a">
 "view colors by hovering mouse"
 
-
+Gallery Page
+<img width="1709" alt="Screenshot 2023-06-27 at 5 25 56 PM" src="https://github.com/katebarouch/paintbyai/assets/131073205/077448f4-1794-4ed4-ac51-1b55b5bf1021">
+"click on image to redirect to final product page"
 
