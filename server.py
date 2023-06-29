@@ -152,19 +152,12 @@ def view_product(painting_id):
     print(colors)
 
     color_dict = {}
-    color_prompts = [f'What is the English name for color {color.hexcode}? Your response should be in the format of "#hexcode: english name".' for color in colors]
-    print(color_prompts)
-    responses = get_paint_info(color_prompts)
-    print(responses)
     
-    for index, color in enumerate(colors):
+    for color in colors:
         hexcode = color.hexcode
         number = color.paint_id
-        if index < len(responses):
-            common_color_name = responses[index]
-            color_dict[hexcode] = f"{number} \n {common_color_name}"
-        else:
-            print(f"No response found for color: {hexcode}")
+        color_dict[hexcode] = number
+
 
     return render_template('finalproduct.html', filename1=filename1, filename2=filename2, prompt = prompt, color_dict = color_dict, painting_id=painting_id)
 
