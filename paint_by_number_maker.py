@@ -270,7 +270,7 @@ def replace_fill_colors_black_lines(svg_file, output2_file):
             paths, attributes = merge_neighboring_paths(paths, attributes)
 
             # Remove any unnecessary path segments in the center of the path
-            paths, attributes, centers = remove_inner_segments(paths, attributes)
+            # paths, attributes, centers = remove_inner_segments(paths, attributes)
 
             drawing = Drawing(output2_file, viewBox="0 0 1024 1024")
 
@@ -335,9 +335,9 @@ def replace_fill_colors_black_lines(svg_file, output2_file):
             drawing.saveas(output2_file)
 
             # Print the color dictionary
-            print("Color Dictionary:")
-            for color, number in color_dict.items():
-                print(f"Hex Code: {color} - Number: {number}")
+            # print("Color Dictionary:")
+            # for color, number in color_dict.items():
+            #     print(f"Hex Code: {color} - Number: {number}")
 
             return color_dict
 
@@ -372,14 +372,13 @@ def create_paint_by_numbers(prompt, num_colors, painting_id):
     response = dalle(prompt)
     print('response')
     output_file = generate_image(response, painting_id)
-    print(output_file)
     vectorize(f'static/images/{painting_id}dalle.jpg', painting_id)
     num_colors = num_colors
 
-    new_colors = replace_fill_colors(f'static/images/{painting_id}vectorized.svg', num_colors, output_file)
+    replace_fill_colors(f'static/images/{painting_id}vectorized.svg', num_colors, output_file)
     color_dict = replace_fill_colors_black_lines(output_file, f'static/images/{painting_id}final.svg')
 
     return color_dict
 
-if __name__ == '__main__':
-    create_paint_by_numbers('flower', 20, 'xyz')
+# if __name__ == '__main__':
+#     create_paint_by_numbers('flower', 20, 'xyz')

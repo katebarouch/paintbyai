@@ -110,7 +110,7 @@ def get_info():
     print(prompt)
     
     color_dict = create_paint_by_numbers(prompt, number_colors, painting.painting_id)
-    print (color_dict)
+    # print (color_dict)
     filename1= f'{painting.painting_id}vectorized.svg'
     filename2= f'{painting.painting_id}final.svg'
 
@@ -123,8 +123,8 @@ def get_info():
     painting_id = painting.painting_id
 
     for color, number in color_dict.items():
-        print(color)
-        print(number)
+        # print(color)
+        # print(number)
         paint = Paint(painting_id = painting_id, paint_id = number, hexcode = color, user_id = user)
         db.session.add(paint)
         db.session.commit()
@@ -149,7 +149,7 @@ def view_product(painting_id):
     prompt = painting.prompt
 
     colors = Paint.query.filter(Paint.painting_id == painting_id).all()
-    print(colors)
+    # print(colors)
 
     color_dict = {}
     
