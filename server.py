@@ -4,7 +4,7 @@ from model import connect_to_db, db, User, Painting, Paint
 import crud
 from jinja2 import StrictUndefined
 from paint_by_number_maker import create_paint_by_numbers
-from shop import get_paint_info
+from shop import get_paint_info, send_message
 from passlib.hash import argon2
 from flask import Flask
 from datetime import datetime
@@ -166,16 +166,10 @@ def view_product(painting_id):
         else:
             print(f"No response found for color: {hexcode}")
 
-
-
     return render_template('finalproduct.html', filename1=filename1, filename2=filename2, prompt = prompt, color_dict = color_dict, painting_id=painting_id)
 
 @app.route('/shop')
 def shop():
-    
-    # chat_gpt_content = f"Make a shopping list (as short as possible) of the {media} paints I need to buy to make the following colors: {hexcode_list}. Include common name of the colors, the minimum paint tubes needed and in what colors, and then the recipe to mix the colors, as needed."
-
-    # paint_info = get_paint_info(chat_gpt_content)
 
     return render_template("shop.html")
 
@@ -188,3 +182,4 @@ def logout():
 if __name__ == "__main__":
     connect_to_db(app)
     app.run(port=5000)
+
