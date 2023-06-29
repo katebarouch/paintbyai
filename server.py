@@ -107,8 +107,10 @@ def get_info():
     db.session.commit()
 
     prompt = (f" A {light} and {mood} {object} painted with {medium} paints")
+    print(prompt)
     
     color_dict = create_paint_by_numbers(prompt, number_colors, painting.painting_id)
+    print (color_dict)
     filename1= f'{painting.painting_id}vectorized.svg'
     filename2= f'{painting.painting_id}final.svg'
 
@@ -121,10 +123,13 @@ def get_info():
     painting_id = painting.painting_id
 
     for color, number in color_dict.items():
+        print(color)
+        print(number)
         paint = Paint(painting_id = painting_id, paint_id = number, hexcode = color, user_id = user)
         db.session.add(paint)
         db.session.commit()
     
+
     return redirect(f'/finalproduct/{painting_id}')
 
 @app.route('/gallery')
@@ -147,11 +152,19 @@ def view_product(painting_id):
     print(colors)
 
     color_dict = {}
+    color_prompts = [f'What is the English name for color {color.hexcode}? Your response should be in the format of "#hexcode: english name".' for color in colors]
+    print(color_prompts)
+    responses = get_paint_info(color_prompts)
+    print(responses)
     
-    for color in colors:
+    for index, color in enumerate(colors):
         hexcode = color.hexcode
         number = color.paint_id
-        color_dict[hexcode] = number
+        if index < len(responses):
+            common_color_name = responses[index]
+            color_dict[hexcode] = f"{number} \n {common_color_name}"
+        else:
+            print(f"No response found for color: {hexcode}")
 
     return render_template('finalproduct.html', filename1=filename1, filename2=filename2, prompt = prompt, color_dict = color_dict, painting_id=painting_id)
 
