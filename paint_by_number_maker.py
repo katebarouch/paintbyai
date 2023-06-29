@@ -264,15 +264,13 @@ def make_template(svg_file, output2_file):
 
     while attempt_count < max_attempts:
         try:
-            paths, attributes, = svg2paths2(svg_file)
+            paths, attributes, svg_attributes = svg2paths2(svg_file)
 
             # Merge neighboring paths with the same fill color
             paths, attributes = merge_neighboring_paths(paths, attributes)
-            print("merge paths done")
 
             # Remove any unnecessary path segments in the center of the path
-            paths, attributes = remove_inner_segments(paths, attributes)
-            print("remove segments done")
+            # paths, attributes, centers = remove_inner_segments(paths, attributes)
 
             drawing = Drawing(output2_file, viewBox="0 0 1024 1024")
 
@@ -348,7 +346,8 @@ def make_template(svg_file, output2_file):
             attempt_count += 1
 
     print("Max attempts reached. Function failed.")
-    return None
+    color_dict = {}
+    return color_dict
 
 
 def create_paint_by_numbers(prompt, num_colors, painting_id):
