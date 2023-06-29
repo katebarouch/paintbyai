@@ -54,10 +54,9 @@
             <button class="download-button" id="download-button">Download Color Information</button>
         </div> -->
             <div class="grid-container">
-                {% for color, value in color_dict.items() %}
-                    {% set number, common_color_name = value.split('\n', 1) %}
+                {% for color, number in color_dict.items() %}
                         <div class="color-row">
-                            <div class="color-square" style="background-color: {{ color }};" data-text="{{ number}}: {{ common_color_name}}"></div>
+                            <div class="color-square" style="background-color: {{ color }};" data-text="{{ number}}: {{ color }}"></div>
                         </div>
                 {% endfor %}
               </div>
