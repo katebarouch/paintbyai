@@ -152,10 +152,6 @@ def view_product(painting_id):
     print(colors)
 
     color_dict = {}
-    color_prompts = [f'What is the English name for color {color.hexcode}? Your response should be in the format of "#hexcode: english name".' for color in colors]
-    print(color_prompts)
-    responses = get_paint_info(color_prompts)
-    print(responses)
     
     for color in colors:
         hexcode = color.hexcode
