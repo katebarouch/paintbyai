@@ -270,6 +270,10 @@ def make_template(svg_file, output2_file):
             paths, attributes = merge_neighboring_paths(paths, attributes)
             print("merge paths done")
 
+            # Remove any unnecessary path segments in the center of the path
+            paths, attributes = remove_inner_segments(paths, attributes)
+            print("remove segments done")
+
             drawing = Drawing(output2_file, viewBox="0 0 1024 1024")
 
             # Save the drawing as an SVG file
@@ -331,6 +335,11 @@ def make_template(svg_file, output2_file):
 
             # Save the drawing as an SVG file
             drawing.saveas(output2_file)
+
+            # Print the color dictionary
+            print("Color Dictionary:")
+            for color, number in color_dict.items():
+                print(f"Hex Code: {color} - Number: {number}")
 
             return color_dict
 
