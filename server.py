@@ -107,10 +107,8 @@ def get_info():
     db.session.commit()
 
     prompt = (f" A {light} and {mood} {object} painted with {medium} paints")
-    print(prompt)
     
     color_dict = create_paint_by_numbers(prompt, number_colors, painting.painting_id)
-    print (color_dict)
     filename1= f'{painting.painting_id}vectorized.svg'
     filename2= f'{painting.painting_id}final.svg'
 
@@ -123,13 +121,10 @@ def get_info():
     painting_id = painting.painting_id
 
     for color, number in color_dict.items():
-        print(color)
-        print(number)
         paint = Paint(painting_id = painting_id, paint_id = number, hexcode = color, user_id = user)
         db.session.add(paint)
         db.session.commit()
     
-
     return redirect(f'/finalproduct/{painting_id}')
 
 @app.route('/gallery')

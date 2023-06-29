@@ -258,7 +258,7 @@ def remove_inner_segments(paths, attributes):
     return cleaned_paths, cleaned_attributes, centers
 
 
-def replace_fill_colors_black_lines(svg_file, output2_file):
+def make_template(svg_file, output2_file):
     attempt_count = 0
     max_attempts = 5
 
@@ -269,10 +269,6 @@ def replace_fill_colors_black_lines(svg_file, output2_file):
             # Merge neighboring paths with the same fill color
             paths, attributes = merge_neighboring_paths(paths, attributes)
             print("merge paths done")
-
-            # Remove any unnecessary path segments in the center of the path
-            paths, attributes = remove_inner_segments(paths, attributes)
-            print("remove neighbor paths done")
 
             drawing = Drawing(output2_file, viewBox="0 0 1024 1024")
 
@@ -336,11 +332,6 @@ def replace_fill_colors_black_lines(svg_file, output2_file):
             # Save the drawing as an SVG file
             drawing.saveas(output2_file)
 
-            # Print the color dictionary
-            print("Color Dictionary:")
-            for color, number in color_dict.items():
-                print(f"Hex Code: {color} - Number: {number}")
-
             return color_dict
 
         except Exception as e:
@@ -350,23 +341,6 @@ def replace_fill_colors_black_lines(svg_file, output2_file):
     print("Max attempts reached. Function failed.")
     return None
 
-    
-
-# def main():
-#     response = dall_e()
-#     generate_image(response)
-#     vectorize('generated_image.jpg')
-#     svg_file = 'result.svg'
-#     num_colors = 20
-#     output_file = 'output.svg'
-#     output2_file = 'output2.svg'
-
-
-#     new_colors = replace_fill_colors(svg_file, num_colors, output_file)
-#     replace_fill_colors_black_lines(output_file, output2_file)
-
-#     print("SVG file has been successfully created.")
-#     print("Number of unique colors in the image:", len(set(new_colors)))
 
 def create_paint_by_numbers(prompt, num_colors, painting_id):
 
@@ -378,8 +352,8 @@ def create_paint_by_numbers(prompt, num_colors, painting_id):
     vectorize(f'static/images/{painting_id}dalle.jpg', painting_id)
     num_colors = num_colors
 
-    new_colors = replace_fill_colors(f'static/images/{painting_id}vectorized.svg', num_colors, output_file)
-    color_dict = replace_fill_colors_black_lines(output_file, f'static/images/{painting_id}final.svg')
+    replace_fill_colors(f'static/images/{painting_id}vectorized.svg', num_colors, output_file)
+    color_dict = make_template(output_file, f'static/images/{painting_id}final.svg')
 
     return color_dict
 
