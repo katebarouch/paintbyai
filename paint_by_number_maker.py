@@ -270,7 +270,7 @@ def make_template(svg_file, output2_file):
             paths, attributes = merge_neighboring_paths(paths, attributes)
 
             # Remove any unnecessary path segments in the center of the path
-            # paths, attributes, centers = remove_inner_segments(paths, attributes)
+            paths, attributes, centers = remove_inner_segments(paths, attributes)
 
             drawing = Drawing(output2_file, viewBox="0 0 1024 1024")
 
