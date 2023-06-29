@@ -346,7 +346,8 @@ def replace_fill_colors_black_lines(svg_file, output2_file):
             attempt_count += 1
 
     print("Max attempts reached. Function failed.")
-    return None
+    color_dict ={}
+    return color_dict
 
     
 
