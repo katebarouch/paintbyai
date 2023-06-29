@@ -264,13 +264,15 @@ def replace_fill_colors_black_lines(svg_file, output2_file):
 
     while attempt_count < max_attempts:
         try:
-            paths, attributes, svg_attributes = svg2paths2(svg_file)
+            paths, attributes, = svg2paths2(svg_file)
 
             # Merge neighboring paths with the same fill color
             paths, attributes = merge_neighboring_paths(paths, attributes)
+            print("merge paths done")
 
             # Remove any unnecessary path segments in the center of the path
-            paths, attributes, centers = remove_inner_segments(paths, attributes)
+            paths, attributes = remove_inner_segments(paths, attributes)
+            print("remove neighbor paths done")
 
             drawing = Drawing(output2_file, viewBox="0 0 1024 1024")
 
