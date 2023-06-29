@@ -45,7 +45,7 @@ def dalle(prompt):
         size="1024x1024",
         response_format="url"
     )
-    # print(response)
+    print(response)
     return response
 
 def generate_image(api_url, painting_id):
@@ -64,7 +64,7 @@ def generate_image(api_url, painting_id):
     output_file = f'static/images/{painting_id}dalle.jpg'
     image.save(output_file, 'JPEG')
 
-    # print(f"Image saved as {output_file}")
+    print(f"Image saved as {output_file}")
     return output_file
 
 def vectorize(image, painting_id):
@@ -335,9 +335,9 @@ def replace_fill_colors_black_lines(svg_file, output2_file):
             drawing.saveas(output2_file)
 
             # Print the color dictionary
-            # print("Color Dictionary:")
-            # for color, number in color_dict.items():
-            #     print(f"Hex Code: {color} - Number: {number}")
+            print("Color Dictionary:")
+            for color, number in color_dict.items():
+                print(f"Hex Code: {color} - Number: {number}")
 
             return color_dict
 
@@ -346,8 +346,7 @@ def replace_fill_colors_black_lines(svg_file, output2_file):
             attempt_count += 1
 
     print("Max attempts reached. Function failed.")
-    color_dict = {}
-    return color_dict
+    return None
 
     
 
@@ -373,13 +372,14 @@ def create_paint_by_numbers(prompt, num_colors, painting_id):
     response = dalle(prompt)
     print('response')
     output_file = generate_image(response, painting_id)
+    print(output_file)
     vectorize(f'static/images/{painting_id}dalle.jpg', painting_id)
     num_colors = num_colors
 
-    replace_fill_colors(f'static/images/{painting_id}vectorized.svg', num_colors, output_file)
+    new_colors = replace_fill_colors(f'static/images/{painting_id}vectorized.svg', num_colors, output_file)
     color_dict = replace_fill_colors_black_lines(output_file, f'static/images/{painting_id}final.svg')
 
     return color_dict
 
-# if __name__ == '__main__':
-#     create_paint_by_numbers('flower', 20, 'xyz')
+if __name__ == '__main__':
+    create_paint_by_numbers('flower', 20, 'xyz')
