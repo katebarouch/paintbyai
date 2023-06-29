@@ -45,7 +45,7 @@ def dalle(prompt):
         size="1024x1024",
         response_format="url"
     )
-    print(response)
+    # print(response)
     return response
 
 def generate_image(api_url, painting_id):
@@ -64,7 +64,7 @@ def generate_image(api_url, painting_id):
     output_file = f'static/images/{painting_id}dalle.jpg'
     image.save(output_file, 'JPEG')
 
-    print(f"Image saved as {output_file}")
+    # print(f"Image saved as {output_file}")
     return output_file
 
 def vectorize(image, painting_id):
@@ -270,7 +270,7 @@ def replace_fill_colors_black_lines(svg_file, output2_file):
             paths, attributes = merge_neighboring_paths(paths, attributes)
 
             # Remove any unnecessary path segments in the center of the path
-            # paths, attributes, centers = remove_inner_segments(paths, attributes)
+            paths, attributes, centers = remove_inner_segments(paths, attributes)
 
             drawing = Drawing(output2_file, viewBox="0 0 1024 1024")
 
@@ -346,7 +346,8 @@ def replace_fill_colors_black_lines(svg_file, output2_file):
             attempt_count += 1
 
     print("Max attempts reached. Function failed.")
-    return None
+    color_dict = {}
+    return color_dict
 
     
 
