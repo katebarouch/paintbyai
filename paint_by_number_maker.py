@@ -127,7 +127,6 @@ def replace_fill_colors(svg_file, num_colors, output_file):
     cluster_centers = kmeans.cluster_centers_
 
     new_colors = []
-
     for index, path in enumerate(paths):
         path_attributes = attributes[index]
 
@@ -190,87 +189,171 @@ def replace_fill_colors(svg_file, num_colors, output_file):
     drawing.saveas(output_file)
     return new_colors
 
-def merge_neighboring_paths(paths, attributes):
-    merged_paths = []
-    merged_attributes = []
+# def merge_neighboring_paths(paths, attributes):
+#     merged_paths = []
+#     merged_attributes = []
 
-    for index, path in enumerate(paths):
-        path_attributes = attributes[index]
+#     for index, path in enumerate(paths):
+#         path_attributes = attributes[index]
 
-        if 'fill' in path_attributes and 'd' in path_attributes:
-            fill_color = path_attributes['fill']
+#         if 'fill' in path_attributes and 'd' in path_attributes:
+#             fill_color = path_attributes['fill']
 
-            # Check if the current path has the same fill color as the previous merged path
-            if merged_paths and merged_attributes[-1]['fill'] == fill_color:
-                # Append the current path's 'd' attribute to the previous merged path's 'd' attribute
-                merged_attributes[-1]['d'] += " " + path_attributes['d']
-            else:
-                # Add a new merged path with the current path's attributes
-                merged_paths.append(path)
-                merged_attributes.append(path_attributes)
+#             # Check if the current path has the same fill color as the previous merged path
+#             if merged_paths and merged_attributes[-1]['fill'] == fill_color:
+#                 # Append the current path's 'd' attribute to the previous merged path's 'd' attribute
+#                 merged_attributes[-1]['d'] += " " + path_attributes['d']
+#             else:
+#                 # Add a new merged path with the current path's attributes
+#                 merged_paths.append(path)
+#                 merged_attributes.append(path_attributes)
 
-    return merged_paths, merged_attributes
+#     return merged_paths, merged_attributes
 
-def remove_inner_segments(paths, attributes):
-    cleaned_paths = []
-    cleaned_attributes = []
-    centers = []
+# def remove_inner_segments(paths, attributes):
+#     cleaned_paths = []
+#     cleaned_attributes = []
+#     centers = []
 
-    for path, attribute in zip(paths, attributes):
-        path_obj = parse_path(path)
-        bbox = path_obj.bbox()
-        center = (bbox[0] + bbox[2]) / 2 + (bbox[1] + bbox[3]) / 2 * 1j
+#     for path, attribute in zip(paths, attributes):
+#         path_obj = parse_path(path)
+#         bbox = path_obj.bbox()
+#         center = (bbox[0] + bbox[2]) / 2 + (bbox[1] + bbox[3]) / 2 * 1j
 
-        intersection_points = []
-        contributing_segments = []
+#         intersection_points = []
+#         contributing_segments = []
 
-        for segment in path_obj:
-            line = Line(center, segment.point(0.5))
+#         for segment in path_obj:
+#             line = Line(center, segment.point(0.5))
 
-            if segment is not None and segment.intersect(line):
+#             if segment is not None and segment.intersect(line):
 
-                intersection = segment.intersect(line)
-                if intersection is not None:
-                    for point, _ in intersection:
-                        if isinstance(segment, Line):
-                            intersection_points.append(complex(point.real, point.imag))
-                        elif isinstance(segment, QuadraticBezier):
-                            intersection_points.append(complex(point[0].real, point[0].imag))
+#                 intersection = segment.intersect(line)
+#                 if intersection is not None:
+#                     for point, _ in intersection:
+#                         if isinstance(segment, Line):
+#                             intersection_points.append(complex(point.real, point.imag))
+#                         elif isinstance(segment, QuadraticBezier):
+#                             intersection_points.append(complex(point[0].real, point[0].imag))
 
-                    contributing_segments.append(segment)
+#                     contributing_segments.append(segment)
 
-        intersection_points.sort(key=lambda p: abs(p - center))
+#         intersection_points.sort(key=lambda p: abs(p - center))
 
-        if intersection_points:
-            first_intersection_index = path_obj.point_to_segment_index(intersection_points[0])
-            subpaths = path_obj.split(first_intersection_index)
+#         if intersection_points:
+#             first_intersection_index = path_obj.point_to_segment_index(intersection_points[0])
+#             subpaths = path_obj.split(first_intersection_index)
 
-            final_path = subpaths[0]
-            for subpath in subpaths[1:]:
-                final_path += subpath
-        else:
-            final_path = path_obj
+#             final_path = subpaths[0]
+#             for subpath in subpaths[1:]:
+#                 final_path += subpath
+#         else:
+#             final_path = path_obj
 
-        cleaned_paths.append(str(final_path).replace("Path(", "").replace(")", ""))
-        cleaned_attributes.append(attribute)
-        centers.append(center)
+#         cleaned_paths.append(str(final_path).replace("Path(", "").replace(")", ""))
+#         cleaned_attributes.append(attribute)
+#         centers.append(center)
 
-    return cleaned_paths, cleaned_attributes, centers
+#     return cleaned_paths, cleaned_attributes, centers
 
 
-def replace_fill_colors_black_lines(svg_file, output2_file):
+# def replace_fill_colors_black_lines(svg_file, output2_file):
+#     attempt_count = 0
+#     max_attempts = 5
+
+#     while attempt_count < max_attempts:
+#         try:
+#             paths, attributes, svg_attributes = svg2paths2(svg_file)
+
+#             # Merge neighboring paths with the same fill color
+#             paths, attributes = merge_neighboring_paths(paths, attributes)
+
+#             # Remove any unnecessary path segments in the center of the path
+#             paths, attributes, centers = remove_inner_segments(paths, attributes)
+
+#             drawing = Drawing(output2_file, viewBox="0 0 1024 1024")
+
+#             # Save the drawing as an SVG file
+#             drawing.saveas(output2_file)
+
+#             # Dictionary to store hex codes and their corresponding numbers
+#             color_dict = {}
+
+#             for index in range(len(paths)):
+#                 path_str = paths[index]
+#                 path_attributes = attributes[index]
+
+#                 # Create a group element
+#                 group = drawing.add(drawing.g())
+
+#                 if 'fill' in path_attributes and 'd' in path_attributes:
+#                     # Get the fill color
+#                     fill_color = path_attributes['fill']
+
+#                     # Clean up the 'd' attribute
+#                     d = " ".join(path_attributes['d'].split())
+
+#                     # Create a new path with the specified attributes
+#                     new_path = path.Path(
+#                         d=d,
+#                         fill=fill_color,
+#                         fill_opacity=0.15,
+#                         stroke=fill_color,
+#                         stroke_opacity=0.25,
+#                         stroke_width=1.25,
+#                     )
+
+#                     # Add the new path to the drawing
+#                     drawing.add(new_path)
+
+#                     # Assign number to the fill color or reuse existing number
+#                     if fill_color not in color_dict:
+#                         color_dict[fill_color] = len(color_dict) + 1
+#                     number = color_dict[fill_color]
+
+#                     # Find the first two segments of the path
+#                     segments = parse_path(d)
+#                     segment1 = segments[0]
+#                     segment2 = segments[1]
+
+#                     # Calculate the midpoint of the first two segments
+#                     midpoint = (segment1.point(0.5) + segment2.point(0.5)) / 2
+
+#                     # Add the text element above the path at the midpoint
+#                     text = drawing.text(
+#                         fill=fill_color,
+#                         insert=(midpoint.real, midpoint.imag - 1),
+#                         text=str(number),
+#                     )
+#                     text['font-size'] = "7px"
+#                     text['text-anchor'] = 'middle'
+#                     text['dominant-baseline'] = 'central'  # Center the text horizontally
+#                     group.add(text)
+
+#             # Save the drawing as an SVG file
+#             drawing.saveas(output2_file)
+
+#             # Print the color dictionary
+#             print("Color Dictionary:")
+#             for color, number in color_dict.items():
+#                 print(f"Hex Code: {color} - Number: {number}")
+
+#             return color_dict
+
+#         except Exception as e:
+#             print(f"An error occurred: {str(e)}")
+#             attempt_count += 1
+
+#     print("Max attempts reached. Function failed.")
+#     return None
+
+def make_template(svg_file, output2_file):
     attempt_count = 0
     max_attempts = 5
 
     while attempt_count < max_attempts:
         try:
             paths, attributes, svg_attributes = svg2paths2(svg_file)
-
-            # Merge neighboring paths with the same fill color
-            paths, attributes = merge_neighboring_paths(paths, attributes)
-
-            # Remove any unnecessary path segments in the center of the path
-            paths, attributes, centers = remove_inner_segments(paths, attributes)
 
             drawing = Drawing(output2_file, viewBox="0 0 1024 1024")
 
@@ -315,10 +398,15 @@ def replace_fill_colors_black_lines(svg_file, output2_file):
                     # Find the first two segments of the path
                     segments = parse_path(d)
                     segment1 = segments[0]
-                    segment2 = segments[1]
+                    segment2 = segments[1] if len(segments) >= 2 else None
 
-                    # Calculate the midpoint of the first two segments
-                    midpoint = (segment1.point(0.5) + segment2.point(0.5)) / 2
+                    if segment2:
+                        # Calculate the midpoint of the first two segments
+                        midpoint = (segment1.point(0.5) + segment2.point(0.5)) / 2
+
+                    else:
+                        # Set the midpoint as the end point of segment1
+                        midpoint = segment1.point(1)
 
                     # Add the text element above the path at the midpoint
                     text = drawing.text(
@@ -334,11 +422,6 @@ def replace_fill_colors_black_lines(svg_file, output2_file):
             # Save the drawing as an SVG file
             drawing.saveas(output2_file)
 
-            # Print the color dictionary
-            print("Color Dictionary:")
-            for color, number in color_dict.items():
-                print(f"Hex Code: {color} - Number: {number}")
-
             return color_dict
 
         except Exception as e:
@@ -347,8 +430,6 @@ def replace_fill_colors_black_lines(svg_file, output2_file):
 
     print("Max attempts reached. Function failed.")
     return None
-
-    
 
 # def main():
 #     response = dall_e()
@@ -377,7 +458,7 @@ def create_paint_by_numbers(prompt, num_colors, painting_id):
     num_colors = num_colors
 
     new_colors = replace_fill_colors(f'static/images/{painting_id}vectorized.svg', num_colors, output_file)
-    color_dict = replace_fill_colors_black_lines(output_file, f'static/images/{painting_id}final.svg')
+    color_dict = make_template(output_file, f'static/images/{painting_id}final.svg')
 
     return color_dict
 
