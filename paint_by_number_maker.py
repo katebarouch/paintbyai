@@ -346,8 +346,7 @@ def replace_fill_colors_black_lines(svg_file, output2_file):
             attempt_count += 1
 
     print("Max attempts reached. Function failed.")
-    color_dict ={}
-    return color_dict
+    return None
 
     
 
@@ -382,5 +381,3 @@ def create_paint_by_numbers(prompt, num_colors, painting_id):
 
     return color_dict
 
-if __name__ == '__main__':
-    create_paint_by_numbers('flower', 20, 'xyz')
