@@ -11,69 +11,11 @@ from dotenv import load_dotenv
 import os
 load_dotenv(".gitignore/secrets.sh")
 
-def dall_e():
-    # define OpenAI key
-    api_key = os.getenv("OPENAI_API_KEY")
-    openai.api_key = api_key
-
-    # text prompt
-    answer = input("What would you like to paint today?")
-    prompt = (f"a watercolor painting of {answer}")
-    # prompt = answer
-
-    # generate an image
-    response = openai.Image.create(
-        prompt=prompt,
-        model="image-alpha-001",
-        size="1024x1024",
-        response_format="url"
-    )
-    print(response)
-    return response
-
-def dalle(prompt):
-    # define OpenAI key
-    api_key = os.getenv("OPENAI_API_KEY")
-    openai.api_key = api_key
-
-    # prompt = answer
-
-    # generate an image
-    response = openai.Image.create(
-        prompt=prompt,
-        model="image-alpha-001",
-        size="1024x1024",
-        response_format="url"
-    )
-    print(response)
-    return response
-
-def generate_image(api_url, painting_id):
-    # Extract the URL from the response dictionary
-    url = api_url['data'][0]['url']
-
-    # Make a request to the DALL·E API to get the image data
-    response = requests.get(url)
-    response.raise_for_status()
-    image_data = response.content
-
-    # Load the image data into a Pillow image object
-    image = Image.open(io.BytesIO(image_data))
-
-    # Save the image as a JPEG file
-    output_file = f'static/images/{painting_id}dalle.jpg'
-    image.save(output_file, 'JPEG')
-
-    print(f"Image saved as {output_file}")
-    return output_file
-
 def vectorize(image, painting_id):
     response = requests.post(
         'https://vectorizer.ai/api/v1/vectorize',
         files={'image': open(image,"rb")},
-        # data={
-        #     # TODO: Add more upload options here
-        # },
+
         headers={
             'Authorization':
             'Basic dmtrZm1sY2ZqOGI1aDdrOmdsdXBkcmVpNmw0am4wMXJtODJoZ2QxMnEyNjUwYWhmZmQ0b3ZncGd2cm4ydGFka3VvcDc='
@@ -81,12 +23,14 @@ def vectorize(image, painting_id):
     )
     if response.status_code == requests.codes.ok:
         # Save result
-        with open(f'static/images/{painting_id}vectorized.svg', 'wb') as out:
+        vector_img_path = f'static/images/{painting_id}dalle.jpg'
+        with open(vector_img_path, 'wb') as out:
             out.write(response.content)
-
 
     else:
         print("Error:", response.status_code, response.text)
+
+    return vector_img_path
 
 def hex_to_rgb(hex_color):
     hex_color = hex_color.lstrip('#')
@@ -105,12 +49,12 @@ def get_closest_color(color, colors):
     closest_color = colors[closest_index]
     return closest_color
 
-def replace_fill_colors(svg_file, num_colors, output_file):
-    drawing = svgwrite.Drawing(filename=output_file)
+def replace_fill_colors(input_file, num_colors, painting_id):
+    drawing = svgwrite.Drawing(filename=f'static/images/{painting_id}vectorized.svg', viewBox="0 0 1024 1024")
 
     fill_colors = []
     # Load SVG paths and attributes
-    paths, attributes, svg_attributes = svg2paths2(svg_file)
+    paths, attributes, svg_attributes = svg2paths2(input_file)
     # Extract fill colors from attributes
     for index in range(len(paths)):
         path_attributes = attributes[index]
@@ -185,9 +129,12 @@ def replace_fill_colors(svg_file, num_colors, output_file):
                 new_path = svgwrite.path.Path(d=" ".join(path_attributes['d'].split()), stroke=closest_color_hex, fill='none')
                 drawing.add(new_path)
                 new_colors.append(closest_color_hex)
+    
 
-    drawing.saveas(output_file)
-    return new_colors
+    less_colors_img_path = f'static/images/{painting_id}vectorized.svg'
+    drawing.saveas(less_colors_img_path)
+
+    return less_colors_img_path
 
 # def merge_neighboring_paths(paths, attributes):
 #     merged_paths = []
@@ -256,109 +203,18 @@ def replace_fill_colors(svg_file, num_colors, output_file):
 
 #     return cleaned_paths, cleaned_attributes, centers
 
-
-# def replace_fill_colors_black_lines(svg_file, output2_file):
-#     attempt_count = 0
-#     max_attempts = 5
-
-#     while attempt_count < max_attempts:
-#         try:
-#             paths, attributes, svg_attributes = svg2paths2(svg_file)
-
-#             # Merge neighboring paths with the same fill color
-#             paths, attributes = merge_neighboring_paths(paths, attributes)
-
-#             # Remove any unnecessary path segments in the center of the path
-#             paths, attributes, centers = remove_inner_segments(paths, attributes)
-
-#             drawing = Drawing(output2_file, viewBox="0 0 1024 1024")
-
-#             # Save the drawing as an SVG file
-#             drawing.saveas(output2_file)
-
-#             # Dictionary to store hex codes and their corresponding numbers
-#             color_dict = {}
-
-#             for index in range(len(paths)):
-#                 path_str = paths[index]
-#                 path_attributes = attributes[index]
-
-#                 # Create a group element
-#                 group = drawing.add(drawing.g())
-
-#                 if 'fill' in path_attributes and 'd' in path_attributes:
-#                     # Get the fill color
-#                     fill_color = path_attributes['fill']
-
-#                     # Clean up the 'd' attribute
-#                     d = " ".join(path_attributes['d'].split())
-
-#                     # Create a new path with the specified attributes
-#                     new_path = path.Path(
-#                         d=d,
-#                         fill=fill_color,
-#                         fill_opacity=0.15,
-#                         stroke=fill_color,
-#                         stroke_opacity=0.25,
-#                         stroke_width=1.25,
-#                     )
-
-#                     # Add the new path to the drawing
-#                     drawing.add(new_path)
-
-#                     # Assign number to the fill color or reuse existing number
-#                     if fill_color not in color_dict:
-#                         color_dict[fill_color] = len(color_dict) + 1
-#                     number = color_dict[fill_color]
-
-#                     # Find the first two segments of the path
-#                     segments = parse_path(d)
-#                     segment1 = segments[0]
-#                     segment2 = segments[1]
-
-#                     # Calculate the midpoint of the first two segments
-#                     midpoint = (segment1.point(0.5) + segment2.point(0.5)) / 2
-
-#                     # Add the text element above the path at the midpoint
-#                     text = drawing.text(
-#                         fill=fill_color,
-#                         insert=(midpoint.real, midpoint.imag - 1),
-#                         text=str(number),
-#                     )
-#                     text['font-size'] = "7px"
-#                     text['text-anchor'] = 'middle'
-#                     text['dominant-baseline'] = 'central'  # Center the text horizontally
-#                     group.add(text)
-
-#             # Save the drawing as an SVG file
-#             drawing.saveas(output2_file)
-
-#             # Print the color dictionary
-#             print("Color Dictionary:")
-#             for color, number in color_dict.items():
-#                 print(f"Hex Code: {color} - Number: {number}")
-
-#             return color_dict
-
-#         except Exception as e:
-#             print(f"An error occurred: {str(e)}")
-#             attempt_count += 1
-
-#     print("Max attempts reached. Function failed.")
-#     return None
-
-def make_template(svg_file, output2_file):
+def make_template(input_path, painting_id):
     attempt_count = 0
     max_attempts = 5
 
     while attempt_count < max_attempts:
         try:
-            paths, attributes, svg_attributes = svg2paths2(svg_file)
+            paths, attributes, svg_attributes = svg2paths2(input_path)
 
-            drawing = Drawing(output2_file, viewBox="0 0 1024 1024")
+            drawing = Drawing(f'static/images/{painting_id}final.svg', viewBox="0 0 1024 1024")
 
             # Save the drawing as an SVG file
-            drawing.saveas(output2_file)
+            drawing.saveas(f'static/images/{painting_id}final.svg')
 
             # Dictionary to store hex codes and their corresponding numbers
             color_dict = {}
@@ -420,7 +276,7 @@ def make_template(svg_file, output2_file):
                     group.add(text)
 
             # Save the drawing as an SVG file
-            drawing.saveas(output2_file)
+            drawing.saveas(f'static/images/{painting_id}final.svg')
 
             return color_dict
 
@@ -429,36 +285,13 @@ def make_template(svg_file, output2_file):
             attempt_count += 1
 
     print("Max attempts reached. Function failed.")
-    return None
-
-# def main():
-#     response = dall_e()
-#     generate_image(response)
-#     vectorize('generated_image.jpg')
-#     svg_file = 'result.svg'
-#     num_colors = 20
-#     output_file = 'output.svg'
-#     output2_file = 'output2.svg'
-
-
-#     new_colors = replace_fill_colors(svg_file, num_colors, output_file)
-#     replace_fill_colors_black_lines(output_file, output2_file)
-
-#     print("SVG file has been successfully created.")
-#     print("Number of unique colors in the image:", len(set(new_colors)))
-
-def create_paint_by_numbers(prompt, num_colors, painting_id):
-
-    prompt = prompt
-    response = dalle(prompt)
-    print('response')
-    output_file = generate_image(response, painting_id)
-    print(output_file)
-    vectorize(f'static/images/{painting_id}dalle.jpg', painting_id)
-    num_colors = num_colors
-
-    new_colors = replace_fill_colors(f'static/images/{painting_id}vectorized.svg', num_colors, output_file)
-    color_dict = make_template(output_file, f'static/images/{painting_id}final.svg')
-
+    color_dict = {}
     return color_dict
 
+def create_paint_by_numbers(img_path, num_colors, painting_id):
+
+    vector_img_path = vectorize(img_path, painting_id)
+    less_colors_img_path = replace_fill_colors(vector_img_path, num_colors, painting_id)
+    color_dict = make_template(less_colors_img_path, painting_id)
+
+    return color_dict

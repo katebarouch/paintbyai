@@ -8,6 +8,7 @@ from shop import get_paint_info, send_message
 from passlib.hash import argon2
 from flask import Flask
 from datetime import datetime
+from dalle_img_maker import make_dalle_img
 
 app = Flask(__name__)
 app.secret_key = "dev"
@@ -41,8 +42,6 @@ def create_user():
         flash("This email is already associated with an account, please login with password.") 
     else:
         user = crud.create_user(email, hashed)
-        db.session.add(user) 
-        db.session.commit()
         flash("Account created successfully, and you can now login.")
     return redirect('/#begin')
 
@@ -69,7 +68,6 @@ def login():
 def create():
 
     if 'user_id' in session:
-        user = session['user_id']
     
         global  use_count, current_month
 
@@ -96,44 +94,41 @@ def create():
 def get_info():
 
     object = request.form.get("object")
-    medium = request.form.get("medium")
+    media = request.form.get("medium")
     light = request.form.get("light")
     mood = request.form.get("mood")
     number_colors = int(request.form.get("colors"))
 
-    user = session['user_id']
-    painting = Painting(user_id = user)
-    db.session.add(painting) 
-    db.session.commit()
-
-    prompt = (f" A {light} and {mood} {object} painted with {medium} paints")
+    #create prompt
+    prompt = (f" A {light} and {mood} {object} painted with {media} paints")
     print(prompt)
-    
-    color_dict = create_paint_by_numbers(prompt, number_colors, painting.painting_id)
-    # print (color_dict)
-    filename1= f'{painting.painting_id}vectorized.svg'
-    filename2= f'{painting.painting_id}final.svg'
 
-    painting.vectorized_img = filename1
-    painting.final_img = filename2
-    painting.prompt = prompt
-    painting.media = medium
-    db.session.commit()
+    # create painting in database
+    user = session['user_id']
+    painting = crud.create_painting(user, media, prompt)
 
     painting_id = painting.painting_id
 
+    #call on python algorithms to generate images
+    img_path = make_dalle_img(prompt, painting_id)
+    color_dict = create_paint_by_numbers(img_path, number_colors, painting_id)
+
+    # add new images to database
+    filename1= f'{painting_id}vectorized.svg'
+    filename2= f'{painting_id}final.svg'
+    painting.vectorized_img = filename1
+    painting.final_img = filename2
+    db.session.commit()
+
+    # add paints to database
     for color, number in color_dict.items():
-        # print(color)
-        # print(number)
-        paint = Paint(painting_id = painting_id, paint_id = number, hexcode = color, user_id = user)
-        db.session.add(paint)
-        db.session.commit()
-    
+        paint = crud.create_paint(painting_id, number, color, user)
 
     return redirect(f'/finalproduct/{painting_id}')
 
 @app.route('/gallery')
 def view_gallery():
+    # view gallery specific to user
     if 'user_id' in session:
         user = session['user_id']
         paintings = Painting.query.filter(Painting.user_id == user).all()
@@ -143,16 +138,17 @@ def view_gallery():
 
 @app.route('/finalproduct/<painting_id>')
 def view_product(painting_id):
+    
+    #pull up painting info
     painting = Painting.query.filter(Painting.painting_id == painting_id).first()
     filename1 = painting.vectorized_img
     filename2 = painting.final_img
     prompt = painting.prompt
 
     colors = Paint.query.filter(Paint.painting_id == painting_id).all()
-    # print(colors)
 
+    # recreate color_dict
     color_dict = {}
-    
     for color in colors:
         hexcode = color.hexcode
         number = color.paint_id
@@ -174,4 +170,4 @@ def logout():
 
 if __name__ == "__main__":
     connect_to_db(app)
-    app.run(port=5000)
+    app.run(port=3000)
