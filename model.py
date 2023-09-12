@@ -61,13 +61,13 @@ def connect_to_db(flask_app, db_uri="postgresql:///paintbynumbers", echo=True):
     print("Connected to the db!- yay")
 
 
-if __name__ == "__main__":
+def main():
     print("main is called")
-    # from server import app
+    from server import app
 
-    # connect_to_db(app)
+    connect_to_db(app)
 
-    # with app.app_context():
-    #     db.create_all()
-    #     print("All tables created!")
+    with app.app_context():
+        db.create_all()
+        print("All tables created!")
         
