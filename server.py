@@ -3,12 +3,12 @@ from flask import (Flask, render_template, request, flash, session,
 from model import connect_to_db, db, User, Painting, Paint
 import crud
 from jinja2 import StrictUndefined
-from paint_by_number_maker import create_paint_by_numbers
+import paint_by_number_maker
 from shop import get_paint_info, send_message
 from passlib.hash import argon2
 from flask import Flask
 from datetime import datetime
-from dalle_img_maker import make_dalle_img
+import dalle_img_maker
 
 app = Flask(__name__)
 app.secret_key = "dev"
@@ -106,18 +106,16 @@ def get_info():
     # create painting in database
     user = session['user_id']
     painting = crud.create_painting(user, media, prompt)
-
+    
     painting_id = painting.painting_id
 
     #call on python algorithms to generate images
-    img_path = make_dalle_img(prompt, painting_id)
-    color_dict = create_paint_by_numbers(img_path, number_colors, painting_id)
+    img_path = dalle_img_maker.make_dalle_img(prompt, painting_id)
+    color_dict = paint_by_number_maker.create_paint_by_numbers(img_path, number_colors, painting_id)
 
     # add new images to database
-    filename1= f'{painting_id}vectorized.svg'
-    filename2= f'{painting_id}final.svg'
-    painting.vectorized_img = filename1
-    painting.final_img = filename2
+    painting.vectorized_img = f'{painting_id}vectorized.svg'
+    painting.final_img = f'{painting_id}final.svg'
     db.session.commit()
 
     # add paints to database
