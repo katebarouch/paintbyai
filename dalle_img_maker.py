@@ -1,22 +1,20 @@
 from dotenv import load_dotenv
 import os
-load_dotenv(".gitignore/secrets.sh")
+load_dotenv("secrets.sh")
 import openai
 import requests
 from PIL import Image
 import io
 
 def dalle(prompt):
-    # define OpenAI key
+    # Define OpenAI key
     api_key = os.getenv("OPENAI_API_KEY")
+    print("API KEY = ", api_key)
     openai.api_key = api_key
 
-    # prompt = answer
-
-    # generate an image
+    # Generate an image
     response = openai.Image.create(
         prompt=prompt,
-        model="image-alpha-001",
         size="1024x1024",
         response_format="url"
     )
